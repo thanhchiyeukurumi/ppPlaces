@@ -2,6 +2,7 @@ import express from 'express';
 import Place from '../models/Place.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import isPlaceOwner from '../middleware/isPlaceOwner.js';
+import {upload} from '../config/cloudinaryConfig.js';
 
 const router = express.Router();
 
@@ -16,7 +17,6 @@ router.get("/:id", async (req, res) => {
             .populate("owner", "username email")
             .populate("reviews", "content rating author")
         if (!place) return res.status(404).json({ error: "Error fetching location list." });
-
         res.json(place);
     } catch (error) {
         res.status(500).json({ error: "Error fetching location list." });
@@ -34,6 +34,7 @@ router.post("/", authMiddleware, async (req, res) => {
             images,
             owner: req.user.id, 
             location,
+            type,
         });
 
         await newPlace.save();

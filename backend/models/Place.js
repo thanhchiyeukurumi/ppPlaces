@@ -5,6 +5,11 @@ const placeSchema = new mongoose.Schema({
     description: String,
     location: String,
     images: [String],
+    type: {
+        type: String,
+        enum: ["restaurant", "cafe", "hotel", "park", "museum", "shopping_mall", "beach", "mountain", "historical_site", "amusement_park"],
+        required: true
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

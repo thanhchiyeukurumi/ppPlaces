@@ -11,7 +11,7 @@ router.get("/places", authMiddleware, async (req, res) => {
     try {
         const places = await Place.find({ owner: req.user.id }); // Why can't use req.userId here T-T
         res.json(places);
-        console.log(req.userId);
+        // console.log(req.userId); // This is undefined ????
     } catch (error) {
         res.status(500).json({ message: "Error fetching places" });
     }
