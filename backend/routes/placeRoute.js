@@ -14,8 +14,12 @@ router.get('/', async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const place = await Place.findById(req.params.id)
-            .populate("owner", "username email")
-            .populate("reviews", "content rating author")
+            //populate("reviews", "content rating")
+            .populate({
+                path: "reviews",
+                select: "content rating author place",
+                populate: { path: "author", select: "username email" } // Populate tiếp author trong reviews
+            });
         if (!place) return res.status(404).json({ error: "Error fetching location list." });
         res.json(place);
     } catch (error) {
@@ -23,15 +27,14 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, upload.array("images", 4), async (req, res) => {
     try {
-        const { name, description, address, images, location } = req.body;
+        const { name, description, type, location } = req.body;
+        const images = req.files.map((file) => file.path);
         const newPlace = new Place({
             name,
             description,
-            address,
-            images,
+            images: images,
             owner: req.user.id, 
             location,
             type,

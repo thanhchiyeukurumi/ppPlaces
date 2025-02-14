@@ -9,7 +9,7 @@ export async function fetchPlaces() {
         return await res.json();
     } catch (error) {
         console.error("Error fetching location list.", error);
-        return null; 
+        return null;
     }
 }
 
@@ -49,28 +49,95 @@ export async function fetchPlacesByUser() {
     }
 }
 
+export async function fetchReviewsByUser() {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No token found. Please log in.");
+
+        const res = await fetch(`http://localhost:5000/auth/reviews`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Failed to fetch reviews.");
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error("Error fetching reviews:", error.message);
+        throw error;
+    }
+}
+
+
 
 
 export async function addPlace(place) {
     const res = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(place)
     });
     return res.json();
 }
 
+// did'nt test yet :bbbbb
 export async function updatePlace(id, place) {
     const res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(place)
     });
     return res.json();
 }
 
 export async function deletePlace(id) {
-    await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE'
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found. Please log in.");
+
+    const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
     });
+
+    if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to delete place.");
+    }
+
+    return await res.json();
+}
+
+export async function deleteReview(id, idPlace) {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found. Please log in.");
+
+    const res = await fetch(`${API_URL}/${idPlace}/reviews/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to delete review.");
+    }
+
+    return await res.json();
 }

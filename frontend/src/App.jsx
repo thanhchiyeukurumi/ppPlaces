@@ -5,6 +5,7 @@ import AllPlace from "./pages/place/AllPlace";
 import PlaceDetail from "./pages/place/PlaceDetail";
 import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/dashbroad/Dashboard";
+import AddPlace from "./pages/dashbroad/AddPlace";
 
 function App(){
   return (
@@ -16,6 +17,7 @@ function App(){
         <Route path="login" element={<AuthPage />} />
         <Route path="register" element={<AuthPage />} />
         <Route path="dashboard" element={<Dashboard />}></Route>
+        <Route path="/dashboard/add-place" element={<AddPlace />} />
 
         <Route path="*" element={<h1>Not Found</h1>} /> {/*to lazy to creat a page */}
       </Route>

@@ -44,7 +44,7 @@ export default function PlaceDetail() {
                 <ul>
                     {place.reviews.map(review => (
                         <li key={review._id}>
-                            <strong>{review.author.username}</strong>: {review.body} ({review.rating}⭐)
+                            <strong>{review.author.username}</strong>: {review.content} ({review.rating}⭐)
                         </li>
                     ))}
                 </ul>
